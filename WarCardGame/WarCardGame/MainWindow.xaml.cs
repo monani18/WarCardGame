@@ -24,5 +24,16 @@ namespace WarCardGame
         {
             InitializeComponent();
         }
+
+        private void StartGame(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Start Game pressed!");
+        }
+
+        private void Battle_Click(object sender, RoutedEventArgs e)
+        {
+            Console.WriteLine("Battle button pressed!");
+            
+        }
     }
 }

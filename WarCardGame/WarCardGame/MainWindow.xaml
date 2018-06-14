@@ -7,6 +7,20 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <DockPanel HorizontalAlignment="Left" LastChildFill="False" Width="792">
+            <Button Content="Battle!" Height="80" Background='ForestGreen'  VerticalAlignment="Top" HorizontalContentAlignment="Center" DockPanel.Dock="Bottom" Click="Battle_Click"/>
+            <Button Content="Start Game" Height="39" VerticalAlignment="Top" Width="75" DockPanel.Dock="Bottom" Margin="358,0" Click="StartGame"/>
+            <Canvas Height="300" VerticalAlignment="Top" DockPanel.Dock="Bottom" Margin="10,0" RenderTransformOrigin="0.5,0.5">
+                <Canvas.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Canvas.RenderTransform>
+                <Image Height="100" Canvas.Left="180" Canvas.Top="89" Width="100"/>
+            </Canvas>
+        </DockPanel>
     </Grid>
 </Window>
