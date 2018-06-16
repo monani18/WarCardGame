@@ -105,31 +105,44 @@ namespace WarCardGame
         {
             Console.WriteLine(numDecks);
             List<Card> undealtCards = new List<Card>(cards);
-            int d = 0;
-            int u = 0;
-
             List<Card>[] decks = new List<Card>[numDecks];
-            Console.WriteLine("Number of decks: " + decks.Length);
-
-            for (int i = 0; i < numDecks; i++)
+            for (int i=0; i<numDecks; i++)
             {
-                Console.WriteLine("Undealt Cards:");
-                for (int j = 0; j < undealtCards.Count; j++)
-                {
-                    Console.WriteLine(undealtCards[j].number + " " + undealtCards[j].suit);
-                }
+                decks[i] = new List<Card>();
             }
 
-            //while (undealtCards.Count > 0)
-            //{
-            //    //Deal card to player
-            //    decks[d].Add(undealtCards[u]);
-            //    undealtCards.RemoveAt(u);
+            int d = 0;
+            int totalCards = undealtCards.Count;
 
-            //    //Change deck that next card is dealt to
-            //    d = (d < numDecks - 1) ? d++ : 0;
-            //}
+            Console.WriteLine("Number of decks: " + decks.Length);
+            
+            for (int u=0; u<totalCards; u++)
+            {
+                //Deal card 0 (top of deck) to player (last card in deck)
+                Console.WriteLine(undealtCards[0].number + " " + undealtCards[0].suit);
 
+                decks[d].Add(undealtCards[0]);
+                undealtCards.RemoveAt(0);
+                Console.WriteLine(decks[d].Last().number + " " + decks[d].Last().suit);
+
+                Console.WriteLine("Cards not dealt: " + undealtCards.Count);
+                Console.WriteLine("Cards dealt: " + (u+1));
+                Console.WriteLine("Total Cards: " + totalCards);
+                //Change deck that next card is dealt to
+                d = (d < numDecks - 1) ? d+1 : 0;
+                Console.WriteLine("d = " + d);
+            }
+
+            for (int i = 0; i < decks.Length; i++)
+            {
+                Console.WriteLine("Deck " + i + ":");
+                for (int j = 0; j < decks[i].Count; j++)
+                {
+                    Console.WriteLine(decks[0][j].number + " " + decks[0][j].suit);
+                }
+
+                Console.WriteLine("Count for Deck " + i + ": " + decks[i].Count);
+            }
             return decks;
         }
     }
