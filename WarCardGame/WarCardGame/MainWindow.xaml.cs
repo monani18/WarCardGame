@@ -38,14 +38,16 @@ namespace WarCardGame
             List<Card>[] playerDecks = new List<Card>[numPlayers];
             playerDecks = dealCards(shuffled, numPlayers);
 
-            //for (int i=0; i<numPlayers; i++)
-            //{
-            //    Console.WriteLine("Player 1 Deck:");
-            //    for (int j=0; j<playerDecks[0].Count; j++)
-            //    {
-            //        Console.WriteLine(playerDecks[0][j].number + " " + playerDecks[0][j].suit);
-            //    }
-            //}
+            for (int i = 0; i < playerDecks.Length; i++)
+            {
+                Console.WriteLine("Deck " + i + ":");
+                for (int j = 0; j < playerDecks[i].Count; j++)
+                {
+                    Console.WriteLine(playerDecks[0][j].number + " " + playerDecks[0][j].suit);
+                }
+
+                Console.WriteLine("Count for Deck " + i + ": " + playerDecks[i].Count);
+            }
 
             //Console.WriteLine(rand.Next(0, allCards.Count)); //inclusive min 0, exclusive max 52
 
@@ -103,7 +105,6 @@ namespace WarCardGame
 
         private List<Card>[] dealCards(List<Card> cards, int numDecks)
         {
-            Console.WriteLine(numDecks);
             List<Card> undealtCards = new List<Card>(cards);
             List<Card>[] decks = new List<Card>[numDecks];
             for (int i=0; i<numDecks; i++)
@@ -113,35 +114,15 @@ namespace WarCardGame
 
             int d = 0;
             int totalCards = undealtCards.Count;
-
-            Console.WriteLine("Number of decks: " + decks.Length);
             
             for (int u=0; u<totalCards; u++)
             {
                 //Deal card 0 (top of deck) to player (last card in deck)
-                Console.WriteLine(undealtCards[0].number + " " + undealtCards[0].suit);
-
                 decks[d].Add(undealtCards[0]);
                 undealtCards.RemoveAt(0);
-                Console.WriteLine(decks[d].Last().number + " " + decks[d].Last().suit);
-
-                Console.WriteLine("Cards not dealt: " + undealtCards.Count);
-                Console.WriteLine("Cards dealt: " + (u+1));
-                Console.WriteLine("Total Cards: " + totalCards);
+                
                 //Change deck that next card is dealt to
                 d = (d < numDecks - 1) ? d+1 : 0;
-                Console.WriteLine("d = " + d);
-            }
-
-            for (int i = 0; i < decks.Length; i++)
-            {
-                Console.WriteLine("Deck " + i + ":");
-                for (int j = 0; j < decks[i].Count; j++)
-                {
-                    Console.WriteLine(decks[0][j].number + " " + decks[0][j].suit);
-                }
-
-                Console.WriteLine("Count for Deck " + i + ": " + decks[i].Count);
             }
             return decks;
         }
