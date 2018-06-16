@@ -28,23 +28,24 @@ namespace WarCardGame
         private void StartGame(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Start Game pressed!");
-            int numPlayers = 2; //assume 2 players
+
+            //UI is built for 2-player. Code is scalable.
+            int numPlayers = 2;
 
             List<Card> allCards = initCards();
             List<Card> shuffled = shuffle(allCards);
 
-            Console.WriteLine("Unshuffled:");
-            for (int i = 0; i<allCards.Count; i++)
-            {
-                Console.WriteLine(allCards[i].number + " " + allCards[i].suit);
-            }
-            Console.WriteLine("Shuffled:");
-            for (int i = 0; i < shuffled.Count; i++)
-            {
-                Console.WriteLine(shuffled[i].number + " " + shuffled[i].suit);
-            }
+            List<Card>[] playerDecks = new List<Card>[numPlayers];
+            playerDecks = dealCards(shuffled, numPlayers);
 
-            //var lists = dealCards(allCards, numPlayers);
+            //for (int i=0; i<numPlayers; i++)
+            //{
+            //    Console.WriteLine("Player 1 Deck:");
+            //    for (int j=0; j<playerDecks[0].Count; j++)
+            //    {
+            //        Console.WriteLine(playerDecks[0][j].number + " " + playerDecks[0][j].suit);
+            //    }
+            //}
 
             //Console.WriteLine(rand.Next(0, allCards.Count)); //inclusive min 0, exclusive max 52
 
@@ -86,7 +87,8 @@ namespace WarCardGame
         {
             Random rand = new Random();
 
-            List<Card> shuffledCards = new List<Card>(cards); //constructs a copy of the unshuffled cards
+            //constructs a copy of the unshuffled cards so 'cards' is unmodified
+            List<Card> shuffledCards = new List<Card>(cards); 
 
             int numCards = shuffledCards.Count;
             for (int i = 0; i < numCards; i++)
@@ -99,14 +101,36 @@ namespace WarCardGame
             return shuffledCards;
         }
 
-        //private Tuple<List<Card>, List<Card>> dealCards(List<Card> allCards, int numPlayers)
-        //{
-        //    List<Card> p1Cards;
-        //    List<Card> p2Cards;
+        private List<Card>[] dealCards(List<Card> cards, int numDecks)
+        {
+            Console.WriteLine(numDecks);
+            List<Card> undealtCards = new List<Card>(cards);
+            int d = 0;
+            int u = 0;
 
-        //    Split card deck in numPlayers number of decks
+            List<Card>[] decks = new List<Card>[numDecks];
+            Console.WriteLine("Number of decks: " + decks.Length);
 
-        //    return (p1Cards, p2Cards);
-        //}
+            for (int i = 0; i < numDecks; i++)
+            {
+                Console.WriteLine("Undealt Cards:");
+                for (int j = 0; j < undealtCards.Count; j++)
+                {
+                    Console.WriteLine(undealtCards[j].number + " " + undealtCards[j].suit);
+                }
+            }
+
+            //while (undealtCards.Count > 0)
+            //{
+            //    //Deal card to player
+            //    decks[d].Add(undealtCards[u]);
+            //    undealtCards.RemoveAt(u);
+
+            //    //Change deck that next card is dealt to
+            //    d = (d < numDecks - 1) ? d++ : 0;
+            //}
+
+            return decks;
+        }
     }
 }

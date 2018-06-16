@@ -9,6 +9,5 @@ namespace WarCardGame
     class CardDeck
     {
         public List<Card> Cards { get; set; }
-        //public int 
     }
 }
