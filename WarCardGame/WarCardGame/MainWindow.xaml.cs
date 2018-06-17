@@ -44,11 +44,11 @@ namespace WarCardGame
             //UI is built for 2-player. Code is scalable.
             numPlayers = 2;
 
-            allCards = initCards();
-            shuffled = shuffle(allCards);
+            allCards = InitCards();
+            shuffled = Shuffle(allCards);
 
             playerDecks = new List<Card>[numPlayers];
-            playerDecks = dealCards(shuffled, numPlayers);
+            playerDecks = DealCards(shuffled, numPlayers);
 
             for (int i = 0; i < playerDecks.Length; i++)
             {
@@ -67,13 +67,23 @@ namespace WarCardGame
             Console.WriteLine("Battle button pressed!");
 
             List<Card> battleCards = new List<Card>();
-            
-            //Collect cards for battle and keep them in order
-            for (int i=0; i<numPlayers; i++)
-            {
-                Console.WriteLine(playerDecks[i][0].number + " " + playerDecks[i][0].suit);
-                battleCards.Add(playerDecks[i][0]);
-            }
+            int victor = new int();
+
+            ////Collect cards for battle and keep them in order
+            //for (int i=0; i<numPlayers; i++)
+            //{
+            //    Console.WriteLine(playerDecks[i][0].number + " " + playerDecks[i][0].suit);
+            //    battleCards.Add(playerDecks[i][0]);
+            //}
+
+            Card card0 = new Card();
+            Card card1 = new Card();
+            card0.number = 4;
+            card0.suit = 'S';
+            card1.number = 3;
+            card1.suit = 'D';
+            battleCards.Add(card0);
+            battleCards.Add(card1);
 
             for (int i=0; i<battleCards.Count; i++)
             {
@@ -81,13 +91,27 @@ namespace WarCardGame
             }
 
             //Find victor or declare war
+            int[] firstLastMax = new int[2];
+            firstLastMax = FindMax(battleCards);
+
+            if (firstLastMax[0] == firstLastMax[1]) //there is only one highest card
+            {
+                victor = firstLastMax[0];
+                Console.WriteLine("Victor is Player " + victor);
+            }
+            else
+            {
+                Console.WriteLine("WAR!");
+            }
+            
+
             //Give cards to victor
 
             //int victor = findVictor(
 
         }
 
-        private List<Card> initCards()
+        private List<Card> InitCards()
         {
             //A=14 K=13 Q=12 J=11 10=10... 2=2
             int[] numbers = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 }; 
@@ -111,7 +135,7 @@ namespace WarCardGame
         //Shuffles cards using Fischer-Yates method
         //https://www.coursera.org/learn/algorithms-part1/lecture/12vcF/shuffling
         //https://stackoverflow.com/questions/273313/randomize-a-listt
-        private static List<Card> shuffle(List<Card> cards)
+        private List<Card> Shuffle(List<Card> cards)
         {
             Random rand = new Random();
 
@@ -129,7 +153,7 @@ namespace WarCardGame
             return shuffledCards;
         }
 
-        private List<Card>[] dealCards(List<Card> cards, int numDecks)
+        private List<Card>[] DealCards(List<Card> cards, int numDecks)
         {
             List<Card> undealtCards = new List<Card>(cards);
             List<Card>[] decks = new List<Card>[numDecks];
@@ -152,6 +176,26 @@ namespace WarCardGame
             }
 
             return decks;
+        }
+
+        //Finds the first and last occurrences of the max of a list of cards
+        private int[] FindMax(List<Card> cards)
+        {
+            int[] numbers = new int[cards.Count];
+            int[] firstLastMax = new int[2];
+
+            for (int i=0; i<cards.Count; i++)
+            {
+                numbers[i] = cards[i].number;
+            }
+            int max = numbers.Max();
+            firstLastMax[0] = Array.IndexOf(numbers, max);
+            firstLastMax[1] = Array.LastIndexOf(numbers, max);
+            Console.WriteLine("First index of max: " + firstLastMax[0]);
+            Console.WriteLine("Last index of max: " + firstLastMax[1]);
+
+            //UNTESTED as of 6/17/18 at 2:40AM
+            return firstLastMax;
         }
     }
 }
