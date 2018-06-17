@@ -20,6 +20,10 @@ namespace WarCardGame
     /// </summary>
     public partial class MainWindow : Window
     {
+        //List<Card> allCards { get; set; }
+        //List<Card> shuffled { get; set; }
+        //List<Card>[] playerDecks { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -43,22 +47,17 @@ namespace WarCardGame
                 Console.WriteLine("Deck " + i + ":");
                 for (int j = 0; j < playerDecks[i].Count; j++)
                 {
-                    Console.WriteLine(playerDecks[0][j].number + " " + playerDecks[0][j].suit);
+                    Console.WriteLine(playerDecks[i][j].number + " " + playerDecks[i][j].suit);
                 }
 
                 Console.WriteLine("Count for Deck " + i + ": " + playerDecks[i].Count);
             }
-
-            //Console.WriteLine(rand.Next(0, allCards.Count)); //inclusive min 0, exclusive max 52
-
-            //List<Card> p1cards = lists.Item1;
-            //List<Card> p2cards = lists.Item2;
-
         }
 
         private void Battle_Click(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Battle button pressed!");
+            
         }
 
         private List<Card> initCards()
@@ -124,6 +123,7 @@ namespace WarCardGame
                 //Change deck that next card is dealt to
                 d = (d < numDecks - 1) ? d+1 : 0;
             }
+
             return decks;
         }
     }
