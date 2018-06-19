@@ -24,10 +24,11 @@ namespace WarCardGame
         List<Card> shuffled { get; set; }
         List<Card>[] playerDecks { get; set; }
         List<Card> battleCards { get; set; }
+        List<Card> tableCards { get; set; }
         List<Card>[] playerDecksDown { get; set; }
         
-        //UI is built for 2-player. Code is scalable.
         int numPlayers { get; set; }
+        int numWarCards { get; set; }
 
         public MainWindow()
         {
@@ -45,14 +46,17 @@ namespace WarCardGame
 
             //UI is built for 2-player. Code is scalable.
             numPlayers = 2;
+            numWarCards = 3;
 
             allCards = InitCards();
             shuffled = Shuffle(allCards);
 
             playerDecks = new List<Card>[numPlayers];
             playerDecksDown = new List<Card>[numPlayers];
+
             playerDecks = DealCards(shuffled, numPlayers);
 
+            //TESTING CODE//
             for (int i = 0; i < playerDecks.Length; i++)
             {
                 Console.WriteLine("Deck " + i + ":");
@@ -63,6 +67,7 @@ namespace WarCardGame
 
                 Console.WriteLine("Count for Deck " + i + ": " + playerDecks[i].Count);
             }
+            //TESTING CODE//
         }
 
         private void Battle_Click(object sender, RoutedEventArgs e)
@@ -70,49 +75,36 @@ namespace WarCardGame
             Console.WriteLine("Battle button pressed!");
 
             battleCards = new List<Card>();
+            tableCards = new List<Card>();
             int victor = new int();
 
-            //Collect cards for battle and keep them in order
-            Console.WriteLine("Battle cards:");
-            for (int i = 0; i < numPlayers; i++)
+            battleCards = CollectBattleCards();
+            victor = CompareBattleCards(battleCards); //victor = 0, 1, or (-1 = tie)
+
+            int totalBattleCards = battleCards.Count;
+            for (int i=0; i<totalBattleCards; i++)
             {
-                Console.WriteLine(playerDecks[i][0].number + " " + playerDecks[i][0].suit);
-                battleCards.Add(playerDecks[i][0]);
-                playerDecks[i].RemoveAt(0);
+                MoveCard(battleCards, tableCards, 0);
             }
 
-            //Card card0 = new Card();
-            //Card card1 = new Card();
-            //card0.number = 4;
-            //card0.suit = 'S';
-            //card1.number = 3;
-            //card1.suit = 'D';
-            //battleCards.Add(card0);
-            //battleCards.Add(card1);
-
-            Console.WriteLine("Check on battle cards:");
-            for (int i=0; i<battleCards.Count; i++)
+            while (victor == -1) //war
             {
-                Console.WriteLine(battleCards[i].number + " " + battleCards[i].suit);
+                for (int i=0; i<numPlayers; i++)
+                {
+                    for (int j=0; j<numWarCards; j++)
+                    {
+                        MoveCard(playerDecks[i], tableCards, 0);
+                    }
+                }
+                battleCards = CollectBattleCards();
+                victor = CompareBattleCards(battleCards);
+
+                totalBattleCards = battleCards.Count;
+                for (int i = 0; i < totalBattleCards; i++)
+                {
+                    MoveCard(battleCards, tableCards, 0);
+                }
             }
-
-            //Find victor or declare war
-            int[] firstLastMax = new int[2];
-            firstLastMax = FindMax(battleCards);
-
-            if (firstLastMax[0] == firstLastMax[1]) //there is only one highest card
-            {
-                victor = firstLastMax[0];
-                Console.WriteLine("Victor is Player " + victor);
-                //GiveCards(victor);
-            }
-            else
-            {
-                Console.WriteLine("WAR!");
-
-            }
-
-            //Give cards to victor
             GiveCards(victor);
         }
 
@@ -159,6 +151,12 @@ namespace WarCardGame
             return shuffledCards;
         }
 
+        private void MoveCard(List<Card> from, List<Card> to, int index)
+        {
+            to.Add(from[index]);
+            from.RemoveAt(index);
+        }
+
         private List<Card>[] DealCards(List<Card> cards, int numDecks)
         {
             List<Card> undealtCards = new List<Card>(cards);
@@ -175,8 +173,10 @@ namespace WarCardGame
             for (int u=0; u<totalCards; u++)
             {
                 //Deal card 0 (top of deck) to player (last card in deck)
-                playerDecks[d].Add(undealtCards[0]);
-                undealtCards.RemoveAt(0);
+                //playerDecks[d].Add(undealtCards[0]);
+                //undealtCards.RemoveAt(0);
+
+                MoveCard(undealtCards, playerDecks[d], 0);
                 
                 //Change deck that next card is dealt to
                 d = (d < numDecks - 1) ? d+1 : 0;
@@ -184,43 +184,68 @@ namespace WarCardGame
 
             return playerDecks;
         }
-
-        //Finds the first and last occurrences of the max of a list of cards
-        private int[] FindMax(List<Card> cards)
+        
+        //Collect cards for battle and keep them in order
+        private List<Card> CollectBattleCards()
         {
-            int[] numbers = new int[cards.Count];
-            int[] firstLastMax = new int[2];
+            List<Card> bcards = new List<Card>();
 
-            for (int i=0; i<cards.Count; i++)
+            Console.WriteLine("Battle cards:");
+            for (int i = 0; i < numPlayers; i++)
             {
-                numbers[i] = cards[i].number;
+                Console.WriteLine(playerDecks[i][0].number + " " + playerDecks[i][0].suit);
+                MoveCard(playerDecks[i], bcards, 0);
             }
-            int max = numbers.Max();
-            firstLastMax[0] = Array.IndexOf(numbers, max);
-            firstLastMax[1] = Array.LastIndexOf(numbers, max);
-            Console.WriteLine("First index of max: " + firstLastMax[0]);
-            Console.WriteLine("Last index of max: " + firstLastMax[1]);
             
-            return firstLastMax;
+            return bcards;
+        }
+
+        //Determines victor by comparing the first and last occurrences of the max of a list of cards
+        private int CompareBattleCards(List<Card> bcards)
+        {
+            int[] numbers = new int[bcards.Count];
+            int firstMax, lastMax;
+            int victor;
+
+            for (int i=0; i<bcards.Count; i++)
+            {
+                numbers[i] = bcards[i].number;
+            }
+
+            int max = numbers.Max();
+            firstMax = Array.IndexOf(numbers, max);
+            lastMax = Array.LastIndexOf(numbers, max);
+
+            //Find victor or declare war
+            if (firstMax != lastMax) //there is a tie
+            {
+                victor = -1;
+                Console.WriteLine("WAR!");
+            }
+            else //there is only one highest card
+            {
+                victor = firstMax;
+                Console.WriteLine("Victor is Player " + victor);
+            }
+
+            return victor;
         }
         
         private void GiveCards(int victor)
         {
-            Console.WriteLine("Number of battle cards: " + battleCards.Count);
+            Console.WriteLine("Number of cards on table: " + tableCards.Count);
 
-            Console.WriteLine("Cards won in battle: ");
-            for (int i = 0; i < battleCards.Count; i++)
+            Console.WriteLine("Cards won: ");
+            for (int i = 0; i < tableCards.Count; i++)
             {
-                Console.WriteLine(battleCards[i].number + " " + battleCards[i].suit);
+                Console.WriteLine(tableCards[i].number + " " + tableCards[i].suit);
             }
 
-            int totalBattleCards = battleCards.Count;
+            int totalTableCards = tableCards.Count;
             
-            for (int i=0; i<totalBattleCards; i++)
+            for (int i=0; i< totalTableCards; i++)
             {
-                playerDecksDown[victor].Add(battleCards[0]);
-                battleCards.RemoveAt(0);
-                Console.WriteLine("i=" + i);
+                MoveCard(tableCards, playerDecksDown[victor], 0);
             }
 
             Console.WriteLine("Cards won by player " + victor + ":");
