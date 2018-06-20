@@ -95,5 +95,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="playing-card-568200_1920.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="playing-card-568200_1920 - Copy.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

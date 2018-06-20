@@ -8,9 +8,9 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <DockPanel HorizontalAlignment="Left" LastChildFill="False" Width="792">
-            <Button Content="Battle!" Height="80" Background='ForestGreen'  VerticalAlignment="Top" HorizontalContentAlignment="Center" DockPanel.Dock="Bottom" Click="Battle_Click"/>
-            <Button Content="Start Game" Height="39" VerticalAlignment="Top" Width="75" DockPanel.Dock="Bottom" Margin="358,0" Click="StartGame"/>
-            <Canvas Height="300" VerticalAlignment="Top" DockPanel.Dock="Bottom" Margin="10,0" RenderTransformOrigin="0.5,0.5">
+            <Button x:Name="BattleButton" Content="Battle!" Height="80" Background='ForestGreen'  VerticalAlignment="Top" HorizontalContentAlignment="Center" DockPanel.Dock="Bottom" Click="Battle_Click" IsEnabled="false"/>
+            <Button x:Name="StartButton" Content="Start Game" Height="39" VerticalAlignment="Top" Width="75" DockPanel.Dock="Bottom" Margin="358,0" Click="StartGame"/>
+            <Canvas Height="300" VerticalAlignment="Top" DockPanel.Dock="Top" Margin="10,0" RenderTransformOrigin="0.5,0.5">
                 <Canvas.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform/>
@@ -19,7 +19,15 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </Canvas.RenderTransform>
-                <Image Height="100" Canvas.Left="180" Canvas.Top="89" Width="100"/>
+                <Image Height="192" Canvas.Left="70" Source="playing-card-568200_1920 - Copy.jpg" Stretch="Fill" Canvas.Top="79" Width="128"/>
+                <Image Height="192" Canvas.Left="570" Source="playing-card-568200_1920 - Copy.jpg" Stretch="Fill" Canvas.Top="79" Width="128"/>
+                <Label Content="Player 0" Canvas.Left="88" Canvas.Top="20" FontFamily="Segoe UI Black" FontSize="20"/>
+                <Label Content="Player 1" Canvas.Left="590" Canvas.Top="20" FontFamily="Segoe UI Black" FontSize="20"/>
+                <Label x:Name="Player0Card" Content="XX" Canvas.Left="258" Canvas.Top="144" FontFamily="Segoe UI Black" FontSize="24" Visibility="Hidden"/>
+                <Label x:Name="Player1Card" Content="XX" Canvas.Left="464" Canvas.Top="144" FontFamily="Segoe UI Black" FontSize="24" Visibility="Hidden"/>
+                <Label x:Name="Announcement" Content="Player x won!" Canvas.Left="314" Canvas.Top="52" FontFamily="Segoe UI Black" FontSize="20" Visibility="Hidden"/>
+                <Label x:Name="CardCount0" Content="##" Canvas.Left="114" Canvas.Top="276" FontFamily="Segoe UI Black" FontSize="20"/>
+                <Label x:Name="CardCount1" Content="##" Canvas.Left="616" Canvas.Top="276" FontFamily="Segoe UI Black" FontSize="20"/>
             </Canvas>
         </DockPanel>
     </Grid>

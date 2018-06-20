@@ -38,11 +38,11 @@ namespace WarCardGame
         private void StartGame(object sender, RoutedEventArgs e)
         {
             Console.WriteLine("Start Game pressed!");
-
-            //UI: Hide "Start Game".
-            //UI: Make "Go!" button green.
+            StartButton.Visibility = Visibility.Hidden;
+            BattleButton.IsEnabled = true;
+            BattleButton.Visibility = Visibility.Visible;
+            
             //UI: "LET THE GAMES BEGIN! Click Go! to begin the war."
-            //UI: Show two card decks face-down.
 
             //UI is built for 2-player. Code is scalable.
             numPlayers = 2;
@@ -73,7 +73,8 @@ namespace WarCardGame
 
         private void Battle_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Battle button pressed!");
+            Player0Card.Visibility = Visibility.Visible;
+            Player1Card.Visibility = Visibility.Visible;
 
             battleCards = new List<Card>();
             tableCards = new List<Card>();
@@ -113,6 +114,8 @@ namespace WarCardGame
                 Console.WriteLine("Player " + i + " cards left: " + playerDecks[i].Count);
                 Console.WriteLine("Player " + i + " cards down: " + playerDecksDown[i].Count);
             }
+
+            UpdateCounter();
         }
 
         private List<Card> InitCards()
@@ -125,8 +128,7 @@ namespace WarCardGame
 
             for (int i = 0; i < numbers.Length ; i++)
             {
-                //for (int j = 0; j < suits.Length; j++)
-                for (int j=0; j<1; j++)
+                for (int j = 0; j < suits.Length; j++)
                 {
                     Card card = new Card();
                     card.number = numbers[i];
@@ -171,7 +173,6 @@ namespace WarCardGame
             }
             to.Add(from[index]);
             from.RemoveAt(index);
-            //UpdateStats();
         }
 
         private List<Card>[] DealCards(List<Card> cards, int numDecks)
@@ -202,11 +203,9 @@ namespace WarCardGame
         private List<Card> CollectBattleCards()
         {
             List<Card> bcards = new List<Card>();
-
-            //Console.WriteLine("Battle cards:");
+            
             for (int i = 0; i < numPlayers; i++)
             {
-                //Console.WriteLine(playerDecks[i][0].number + " " + playerDecks[i][0].suit);
                 MovePlayerCard(playerDecks[i], bcards, 0, i);
             }
             
@@ -262,32 +261,11 @@ namespace WarCardGame
             }
         }
 
-        //private void UpdateStats()
-        //{
-        //    for (int i = 0; i < numPlayers; i++)
-        //    {
-        //        if (playerDecks[i] != null)
-        //        {
-        //            int cardsUp = playerDecks[i].Count;
-        //            int cardsDown = playerDecksDown[i].Count;
-
-        //            if (cardsUp + cardsDown == allCards.Count)
-        //            {
-        //                EndGame(i);
-        //            }
-        //            else if (playerDecks[i].Count == 0)
-        //            {
-        //                ReshufflePlayerDeck(i);
-        //            }
-        //        }
-        //    }
-        //}
-
         private void ReshufflePlayerDeck(int player)
         {
             List<Card> shuffleCards = Shuffle(playerDecksDown[player]);
             playerDecksDown[player].Clear();
-            playerDecks[player].Clear(); //unnecessary
+            playerDecks[player].Clear(); //extra check
 
             int totalShuffleCards = shuffleCards.Count;
             for (int i = 0; i < totalShuffleCards; i++)
@@ -300,6 +278,16 @@ namespace WarCardGame
             }
         }
 
+        //Updates UI
+        private void UpdateCounter()
+        {
+            int cardCount0 = playerDecks[0].Count + playerDecksDown[0].Count;
+            int cardCount1 = playerDecks[1].Count + playerDecksDown[1].Count;
+
+            CardCount0.Content = cardCount0.ToString();
+            CardCount1.Content = cardCount1.ToString();
+        }
+        
         private void EndGame()
         {
             int winner = -1;
@@ -313,8 +301,11 @@ namespace WarCardGame
                     winner = i;
                 }
             }
-
-            Console.WriteLine("Player " + winner + " won!");
+            //Console.WriteLine("Player " + winner + " won!");
+            Announcement.Content = "Player " + winner + " won!";
+            Announcement.Visibility = Visibility.Visible;
         }
+
+
     }
 }
