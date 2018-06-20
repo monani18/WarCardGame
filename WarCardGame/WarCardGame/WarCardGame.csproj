@@ -101,5 +101,8 @@
   <ItemGroup>
     <Resource Include="playing-card-568200_1920 - Copy.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="star-152151_1280.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

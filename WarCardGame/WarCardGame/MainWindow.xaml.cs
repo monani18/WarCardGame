@@ -40,7 +40,7 @@ namespace WarCardGame
             Console.WriteLine("Start Game pressed!");
             StartButton.Visibility = Visibility.Hidden;
             BattleButton.IsEnabled = true;
-            BattleButton.Visibility = Visibility.Visible;
+            ManyBattlesLater.IsEnabled = true;
             
             //UI: "LET THE GAMES BEGIN! Click Go! to begin the war."
 
@@ -171,8 +171,11 @@ namespace WarCardGame
             {
                 ReshufflePlayerDeck(player);
             }
-            to.Add(from[index]);
-            from.RemoveAt(index);
+            if (from.Count != 0)
+            {
+                to.Add(from[index]);
+                from.RemoveAt(index);
+            }
         }
 
         private List<Card>[] DealCards(List<Card> cards, int numDecks)
@@ -208,7 +211,13 @@ namespace WarCardGame
             {
                 MovePlayerCard(playerDecks[i], bcards, 0, i);
             }
-            
+
+            if (bcards.Count > 0)
+            {
+                Player0Card.Content = bcards[0].number.ToString() + " " + bcards[0].suit.ToString();
+                Player1Card.Content = bcards[1].number.ToString() + " " + bcards[1].suit.ToString();
+            }
+
             return bcards;
         }
 
@@ -232,13 +241,15 @@ namespace WarCardGame
             if (firstMax != lastMax) //there is a tie
             {
                 victor = -1;
-                Console.WriteLine("WAR!");
+
             }
             else //there is only one highest card
             {
                 victor = firstMax;
                 Console.WriteLine("Victor is Player " + victor);
             }
+
+            ShowBattleElements(victor);
 
             return victor;
         }
@@ -278,7 +289,34 @@ namespace WarCardGame
             }
         }
 
-        //Updates UI
+        private void ShowBattleElements(int victor)
+        {
+            if (victor == 0)
+            {
+                Star0.Visibility = Visibility.Visible;
+                Star1.Visibility = Visibility.Hidden;
+                WarLabel.Visibility = Visibility.Hidden;
+            }
+            else if (victor == 1)
+            {
+                Star0.Visibility = Visibility.Hidden;
+                Star1.Visibility = Visibility.Visible;
+                WarLabel.Visibility = Visibility.Hidden;
+            }
+            else if (victor == -1)
+            {
+                Star0.Visibility = Visibility.Hidden;
+                Star1.Visibility = Visibility.Hidden;
+                WarLabel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Star0.Visibility = Visibility.Hidden;
+                Star1.Visibility = Visibility.Hidden;
+                WarLabel.Visibility = Visibility.Hidden;
+            }
+        }
+
         private void UpdateCounter()
         {
             int cardCount0 = playerDecks[0].Count + playerDecksDown[0].Count;
@@ -301,11 +339,19 @@ namespace WarCardGame
                     winner = i;
                 }
             }
-            //Console.WriteLine("Player " + winner + " won!");
             Announcement.Content = "Player " + winner + " won!";
             Announcement.Visibility = Visibility.Visible;
+
+            BattleButton.IsEnabled = false;
+            StartButton.Visibility = Visibility.Visible;
         }
 
-
+        private void ManyBattlesLater_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i=0; i<100; i++)
+            {
+                BattleButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
     }
 }

@@ -28,6 +28,10 @@
                 <Label x:Name="Announcement" Content="Player x won!" Canvas.Left="314" Canvas.Top="52" FontFamily="Segoe UI Black" FontSize="20" Visibility="Hidden"/>
                 <Label x:Name="CardCount0" Content="##" Canvas.Left="114" Canvas.Top="276" FontFamily="Segoe UI Black" FontSize="20"/>
                 <Label x:Name="CardCount1" Content="##" Canvas.Left="616" Canvas.Top="276" FontFamily="Segoe UI Black" FontSize="20"/>
+                <Image x:Name="Star0" Height="67" Canvas.Left="258" Source="star-152151_1280.png" Stretch="Fill" Canvas.Top="204" Width="62" MaxWidth="50" MaxHeight="50" Visibility="Hidden"/>
+                <Image x:Name="Star1" Height="67" Canvas.Left="464" Source="star-152151_1280.png" Stretch="Fill" Canvas.Top="204" Width="62" MaxWidth="50" MaxHeight="50" Visibility="Hidden"/>
+                <Label x:Name="WarLabel" Content="WAR!" Canvas.Left="346" Canvas.Top="52" FontFamily="Segoe UI Black" FontSize="24"/>
+                <Button x:Name="ManyBattlesLater" Content="100-click shortcut" Canvas.Left="699" Canvas.Top="276" Width="73" Click="ManyBattlesLater_Click" IsEnabled="False"/>
             </Canvas>
         </DockPanel>
     </Grid>
