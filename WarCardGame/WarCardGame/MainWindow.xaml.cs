@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Author: Mona Ni
+//Date: 6/14/18
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,7 +37,7 @@ namespace WarCardGame
         {
             InitializeComponent();
         }
-
+        
         private void StartGame(object sender, RoutedEventArgs e)
         {
             StartButton.Visibility = Visibility.Hidden;
@@ -62,7 +65,6 @@ namespace WarCardGame
                 {
                     Console.WriteLine(playerDecks[i][j].number + " " + playerDecks[i][j].suit);
                 }
-
                 Console.WriteLine("Count for Deck " + i + ": " + playerDecks[i].Count);
             }
             //TESTING CODE//
