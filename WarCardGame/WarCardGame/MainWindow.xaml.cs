@@ -37,12 +37,9 @@ namespace WarCardGame
 
         private void StartGame(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("Start Game pressed!");
             StartButton.Visibility = Visibility.Hidden;
             BattleButton.IsEnabled = true;
             ManyBattlesLater.IsEnabled = true;
-            
-            //UI: "LET THE GAMES BEGIN! Click Go! to begin the war."
 
             //UI is built for 2-player. Code is scalable.
             numPlayers = 2;
@@ -118,6 +115,14 @@ namespace WarCardGame
             UpdateCounter();
         }
 
+        private void ManyBattlesLater_Click(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                BattleButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+            }
+        }
+
         private List<Card> InitCards()
         {
             //A=14 K=13 Q=12 J=11 10=10... 2=2
@@ -170,11 +175,17 @@ namespace WarCardGame
             if (from.Count == 0)
             {
                 ReshufflePlayerDeck(player);
+                from = playerDecks[player];
             }
             if (from.Count != 0)
             {
                 to.Add(from[index]);
                 from.RemoveAt(index);
+            }
+
+            if (playerDecks[player].Count + playerDecksDown[player].Count == 0)
+            {
+                EndGame();
             }
         }
 
@@ -212,7 +223,7 @@ namespace WarCardGame
                 MovePlayerCard(playerDecks[i], bcards, 0, i);
             }
 
-            if (bcards.Count > 0)
+            if (bcards.Count == numPlayers)
             {
                 Player0Card.Content = bcards[0].number.ToString() + " " + bcards[0].suit.ToString();
                 Player1Card.Content = bcards[1].number.ToString() + " " + bcards[1].suit.ToString();
@@ -283,10 +294,6 @@ namespace WarCardGame
             {
                 MoveCard(shuffleCards, playerDecks[player], 0);
             }
-            if (totalShuffleCards == 0)
-            {
-                EndGame();
-            }
         }
 
         private void ShowBattleElements(int victor)
@@ -343,15 +350,8 @@ namespace WarCardGame
             Announcement.Visibility = Visibility.Visible;
 
             BattleButton.IsEnabled = false;
+            ManyBattlesLater.IsEnabled = false;
             StartButton.Visibility = Visibility.Visible;
-        }
-
-        private void ManyBattlesLater_Click(object sender, RoutedEventArgs e)
-        {
-            for (int i=0; i<100; i++)
-            {
-                BattleButton.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-            }
         }
     }
 }
