@@ -49,13 +49,14 @@ namespace WarCardGame
             numWarCards = 3;
 
             allCards = InitCards();
+
             shuffled = Shuffle(allCards);
 
             playerDecks = new List<Card>[numPlayers];
             playerDecksDown = new List<Card>[numPlayers];
 
             playerDecks = DealCards(shuffled, numPlayers);
-
+            
             //TESTING CODE//
             for (int i = 0; i < playerDecks.Length; i++)
             {
@@ -93,7 +94,7 @@ namespace WarCardGame
                 {
                     for (int j=0; j<numWarCards; j++)
                     {
-                        MoveCard(playerDecks[i], tableCards, 0);
+                        MovePlayerCard(playerDecks[i], tableCards, 0, i);
                     }
                 }
                 battleCards = CollectBattleCards();
@@ -106,6 +107,12 @@ namespace WarCardGame
                 }
             }
             GiveCards(victor);
+
+            for (int i=0; i<numPlayers; i++)
+            {
+                Console.WriteLine("Player " + i + " cards left: " + playerDecks[i].Count);
+                Console.WriteLine("Player " + i + " cards down: " + playerDecksDown[i].Count);
+            }
         }
 
         private List<Card> InitCards()
@@ -118,7 +125,8 @@ namespace WarCardGame
 
             for (int i = 0; i < numbers.Length ; i++)
             {
-                for (int j = 0; j < suits.Length; j++)
+                //for (int j = 0; j < suits.Length; j++)
+                for (int j=0; j<1; j++)
                 {
                     Card card = new Card();
                     card.number = numbers[i];
@@ -135,14 +143,12 @@ namespace WarCardGame
         private List<Card> Shuffle(List<Card> cards)
         {
             Random rand = new Random();
-
-            //constructs a copy of the unshuffled cards so 'cards' is unmodified
+            
             List<Card> shuffledCards = new List<Card>(cards); 
 
             int numCards = shuffledCards.Count;
             for (int i = 0; i < numCards; i++)
             {
-                //int r = rand.Next(0, numCards);
                 int r = rand.Next(0, i + 1);
                 Card temp = shuffledCards[r];
                 shuffledCards[r] = shuffledCards[i]; //replaces rth card with 0th card
@@ -155,6 +161,17 @@ namespace WarCardGame
         {
             to.Add(from[index]);
             from.RemoveAt(index);
+        }
+
+        private void MovePlayerCard(List<Card> from, List<Card> to, int index, int player)
+        {
+            if (from.Count == 0)
+            {
+                ReshufflePlayerDeck(player);
+            }
+            to.Add(from[index]);
+            from.RemoveAt(index);
+            //UpdateStats();
         }
 
         private List<Card>[] DealCards(List<Card> cards, int numDecks)
@@ -172,10 +189,6 @@ namespace WarCardGame
             
             for (int u=0; u<totalCards; u++)
             {
-                //Deal card 0 (top of deck) to player (last card in deck)
-                //playerDecks[d].Add(undealtCards[0]);
-                //undealtCards.RemoveAt(0);
-
                 MoveCard(undealtCards, playerDecks[d], 0);
                 
                 //Change deck that next card is dealt to
@@ -190,11 +203,11 @@ namespace WarCardGame
         {
             List<Card> bcards = new List<Card>();
 
-            Console.WriteLine("Battle cards:");
+            //Console.WriteLine("Battle cards:");
             for (int i = 0; i < numPlayers; i++)
             {
-                Console.WriteLine(playerDecks[i][0].number + " " + playerDecks[i][0].suit);
-                MoveCard(playerDecks[i], bcards, 0);
+                //Console.WriteLine(playerDecks[i][0].number + " " + playerDecks[i][0].suit);
+                MovePlayerCard(playerDecks[i], bcards, 0, i);
             }
             
             return bcards;
@@ -247,12 +260,61 @@ namespace WarCardGame
             {
                 MoveCard(tableCards, playerDecksDown[victor], 0);
             }
+        }
 
-            Console.WriteLine("Cards won by player " + victor + ":");
-            for (int i=0; i<playerDecksDown[victor].Count; i++)
+        //private void UpdateStats()
+        //{
+        //    for (int i = 0; i < numPlayers; i++)
+        //    {
+        //        if (playerDecks[i] != null)
+        //        {
+        //            int cardsUp = playerDecks[i].Count;
+        //            int cardsDown = playerDecksDown[i].Count;
+
+        //            if (cardsUp + cardsDown == allCards.Count)
+        //            {
+        //                EndGame(i);
+        //            }
+        //            else if (playerDecks[i].Count == 0)
+        //            {
+        //                ReshufflePlayerDeck(i);
+        //            }
+        //        }
+        //    }
+        //}
+
+        private void ReshufflePlayerDeck(int player)
+        {
+            List<Card> shuffleCards = Shuffle(playerDecksDown[player]);
+            playerDecksDown[player].Clear();
+            playerDecks[player].Clear(); //unnecessary
+
+            int totalShuffleCards = shuffleCards.Count;
+            for (int i = 0; i < totalShuffleCards; i++)
             {
-                Console.WriteLine(playerDecksDown[victor][i].number + " " + playerDecksDown[victor][i].suit);
+                MoveCard(shuffleCards, playerDecks[player], 0);
             }
+            if (totalShuffleCards == 0)
+            {
+                EndGame();
+            }
+        }
+
+        private void EndGame()
+        {
+            int winner = -1;
+            int totalPlayerCards;
+
+            for (int i=0; i<numPlayers; i++)
+            {
+                totalPlayerCards = playerDecks[i].Count + playerDecksDown[i].Count;
+                if (totalPlayerCards == allCards.Count)
+                {
+                    winner = i;
+                }
+            }
+
+            Console.WriteLine("Player " + winner + " won!");
         }
     }
 }
